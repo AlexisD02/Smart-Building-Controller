@@ -5,37 +5,50 @@
         private string buildingID;
         private string currentState;
 
-        // Constructor
-        public BuildingController(string buildingID)
+        // L1R1: Constructor with a string parameter for buildingID
+        public BuildingController(string id)
         {
-            SetBuildingID(buildingID);
-            currentState = "out of hours"; // Initial state
+            // Initialize buildingID with a default non null value
+            buildingID = string.Empty;
+
+            SetBuildingID(id); // This will then set the correct buildingID
+            currentState = "out of hours"; // Set initial currentState
         }
 
-        // Method to get the Building ID
+        // L1R2: GetBuildingID method
         public string GetBuildingID()
         {
             return buildingID;
         }
 
-        // Method to set the Building ID
-        public void SetBuildingID(string newID)
+        // L1R4: SetBuildingID method
+        public void SetBuildingID(string id)
         {
-            // Ensure that the building ID is converted to lowercase
-            buildingID = newID.ToLower();
+            buildingID = id.ToLower(); // Convert uppercase to lowercase
         }
 
-        // Method to get the current state
+        // L1R6: GetCurrentState method
         public string GetCurrentState()
         {
             return currentState;
         }
 
-        // Method to set the current state
-        public void SetCurrentState(string newState)
+        // L1R7: SetCurrentState method
+        public bool SetCurrentState(string newState)
         {
-            // Add any necessary validation for the new state
-            currentState = newState;
+            if (IsValidState(newState)) {
+                currentState = newState;
+                return true;
+            }
+            return false;
+        }
+
+        // Helper method to check for valid states
+        private bool IsValidState(string state)
+        {
+            var validStates = new List<string> { "closed", "out of hours", "open", "fire drill", "fire alarm" };
+            return validStates.Contains(state.ToLower());
         }
     }
+
 }

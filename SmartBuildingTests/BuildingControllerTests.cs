@@ -22,7 +22,7 @@ namespace SmartBuildingTests
 
             // Assert: Verifying that the returned ID matches the expected ID (converted to lowercase)
             Assert.AreEqual(expectedID.ToLower(), result);
-        }
+        }   
 
         // Test for SetBuildingID method with different test cases
         [TestCase("BUILDING123")]
@@ -56,20 +56,38 @@ namespace SmartBuildingTests
         }
 
         // Test for SetCurrentState method with different states
-        [TestCase("open")]
         [TestCase("closed")]
-        public void SetCurrentState_ValidState_SetsStateCorrectly(string newState)
+        [TestCase("out of hours")]
+        [TestCase("open")]
+        [TestCase("fire drill")]
+        [TestCase("fire alarm")]
+        public void SetCurrentState_ValidState_ReturnsTrueAndSetsState(string newState)
         {
-            // Arrange: Initializing the controller with a test ID
-            string expectedID = "building123";
-            BuildingController controller = new BuildingController(expectedID);
+            // Arrange
+            BuildingController controller = new BuildingController("building123");
 
-            // Act: Setting a new state and retrieving it
-            controller.SetCurrentState(newState);
-            string result = controller.GetCurrentState();
+            // Act
+            bool result = controller.SetCurrentState(newState);
 
-            // Assert: Verifying that the new state is set correctly
-            Assert.AreEqual(newState, result);
+            // Assert
+            Assert.IsTrue(result);
+            Assert.AreEqual(newState, controller.GetCurrentState());
+        }
+
+        [TestCase("invalidState")]
+        [TestCase("systemDelete")]
+        [TestCase("")]
+        public void SetCurrentState_InvalidState_ReturnsFalse(string newState)
+        {
+            // Arrange
+            BuildingController controller = new BuildingController("building123");
+
+            // Act
+            bool result = controller.SetCurrentState(newState);
+
+            // Assert
+            Assert.IsFalse(result);
+            Assert.AreNotEqual(newState, controller.GetCurrentState()); // State remains unchanged
         }
     }
 }
