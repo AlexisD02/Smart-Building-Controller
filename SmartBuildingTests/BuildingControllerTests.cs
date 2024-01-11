@@ -1,30 +1,75 @@
 ﻿using NUnit.Framework;
 using SmartBuilding;
 
-
 namespace SmartBuildingTests
 {
     [TestFixture]
     public class BuildingControllerTests
     {
-        
-        //This is a test to check if the project template is correctly configured on your machine
-        //you should uncomment the test method below and check that the test appears in the text explorer. (Test -> Test Explorer)
-        //When you run the unit test it should pass with the message "Example Test Passed"
-        //If the test is not visible or the unit test does not run or pass: Ask a tutor for help
-        //When you have confirmed that the template can run unit tests, you can delete the teet. (and this comment)
-        /*
+        // Naming convention for test methods: MethodBeingTested_TestScenario_ExpectedOutput
+        // Example: SetCurrentState_InvalidState_ReturnsFalse
+
+        // Test for GetBuildingID method
         [Test]
-        public void TemplateTest(){
-            Assert.Pass("Example Test Passed!");
+        public void GetBuildingID_ValidID_ReturnsCorrectID()
+        {
+            // Arrange: Setting up the test with a known ID and initializing the controller
+            string expectedID = "building123";
+            BuildingController controller = new BuildingController(expectedID);
+
+            // Act: Getting the ID from the controller
+            string result = controller.GetBuildingID();
+
+            // Assert: Verifying that the returned ID matches the expected ID (converted to lowercase)
+            Assert.AreEqual(expectedID.ToLower(), result);
         }
-        */
 
-        //use the following naming convention for your test method names MethodBeingTested_TestScenario_ExpectedOutput
-        //E.g. SetCurrentState_InvalidState_ReturnsFalse
+        // Test for SetBuildingID method with different test cases
+        [TestCase("BUILDING123")]
+        [TestCase("buildingABC")]
+        public void SetBuildingID_ValidID_SetsIDCorrectly(string newID)
+        {
+            // Arrange: Initializing the controller with an initial ID
+            BuildingController controller = new BuildingController("initialID");
 
-        //Write Test Code Here...
+            // Act: Setting a new ID and retrieving it
+            controller.SetBuildingID(newID);
+            string result = controller.GetBuildingID();
 
+            // Assert: Checking if the new ID is set correctly and converted to lowercase
+            Assert.AreEqual(newID.ToLower(), result);
+        }
 
+        // Test for GetCurrentState method to verify the initial state
+        [Test]
+        public void GetCurrentState_InitialState_ReturnsOutOfHours()
+        {
+            // Arrange: Initializing the controller with a test ID
+            string expectedID = "building123";
+            BuildingController controller = new BuildingController(expectedID);
+
+            // Act: Getting the current state of the controller
+            string result = controller.GetCurrentState();
+
+            // Assert: Verifying that the initial state is "out of hours"
+            Assert.AreEqual("out of hours", result);
+        }
+
+        // Test for SetCurrentState method with different states
+        [TestCase("open")]
+        [TestCase("closed")]
+        public void SetCurrentState_ValidState_SetsStateCorrectly(string newState)
+        {
+            // Arrange: Initializing the controller with a test ID
+            string expectedID = "building123";
+            BuildingController controller = new BuildingController(expectedID);
+
+            // Act: Setting a new state and retrieving it
+            controller.SetCurrentState(newState);
+            string result = controller.GetCurrentState();
+
+            // Assert: Verifying that the new state is set correctly
+            Assert.AreEqual(newState, result);
+        }
     }
 }
